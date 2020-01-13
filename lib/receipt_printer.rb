@@ -13,25 +13,30 @@ class ReceiptPrinter
   end
 
   def print
-    subtotal = items.reduce(0) do |sum, item|
-      output.puts "#{item}: #{sprintf('$%.2f', item_cost(item))}"
-
-      sum + item_cost(item).to_i
-    end
-
+    output_items
     output_divider
-    output.puts "subtotal: #{sprintf('$%.2f', subtotal)}"
-    output.puts "tax: #{sprintf('$%.2f', subtotal * TAX)}"
+    output_subtotal
+    output_tax
     output_divider
-    output.puts "total: #{sprintf('$%.2f', subtotal + (subtotal * TAX))}"
+    output_total
   end
-  # All of these methods refer to 'subtotal', which is an iterative function
-  # defined here.
-  # The subtotal method takes an array of items, starts at the beginning, adds
-  # them.
+
+  def iterate_through_items
+
+  end
+  # Ah, okay, use the same loop, but split it up. One to do the math, one to
+  # print the text.
 
   def output_items
+    items.each do |item|
+      output.puts "#{item}: #{sprintf('$%.2f', item_cost(item))}"
+    end
+  end
 
+  def subtotal
+    items.reduce(0) do |sum, item|
+      sum + item_cost(item).to_i
+    end
   end
 
   def item_cost(item)
@@ -41,17 +46,17 @@ class ReceiptPrinter
   def output_divider
     output.puts divider
   end
-
+  # Each of the methods below is doing the math. 
   def output_subtotal
-
+    output.puts "subtotal: #{sprintf('$%.2f', subtotal)}"
   end
 
   def output_tax
-
+    output.puts "tax: #{sprintf('$%.2f', subtotal * TAX)}"
   end
 
   def output_total
-
+    output.puts "total: #{sprintf('$%.2f', subtotal + (subtotal * TAX))}"
   end
 
   private
